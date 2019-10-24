@@ -1,0 +1,8 @@
+PyQt5
+
+# dev & test
+
+freezegun # test cutoff tool
+ipdb
+darkdetect
+fbs
