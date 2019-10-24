@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
     QLabel,
     QSizePolicy,
 )
-from PyQt5.QtCore import pyqtSlot, QTimer, QPoint, Qt
+from PyQt5.QtCore import pyqtSlot, QTimer, QPoint, Qt, QSettings
 from PyQt5.QtGui import QCursor, QIcon
 import darkdetect
 import sys
@@ -28,6 +28,9 @@ class AppContext(ApplicationContext):
         my_tray.show()
 
         return self.app.exec_()
+
+    def config(self):
+        return self.get_resource("config.ini")
 
     @cached_property
     def status_icons(self):
@@ -48,7 +51,8 @@ class TrayIcon(QSystemTrayIcon):
         self.messageClicked.connect(self.message_clicked_slot)
         self.ctx = ctx
 
-        self.cutoff = CutOff(cutoff_range_index=0)
+        self.config = self.loadConfig()
+        self.cutoff = CutOff(cutoff_range_index=int(self.config.value("range/cutoff_range_index")))
         self.last_status = self.cutoff.status()
         self.last_theme = darkdetect.theme().lower()
         self.updateIcon()
@@ -58,6 +62,20 @@ class TrayIcon(QSystemTrayIcon):
         self._timer.start()
         self.create_menu()
         self.showNotification()
+
+    def loadConfig(self):
+        config = QSettings(self.ctx.config(), QSettings.IniFormat)
+        return config
+
+    def updateConfig(self, key, value):
+        self.config.setValue(key, value)
+        self.config.sync()
+        self.reloadCutOff()
+
+    def reloadCutOff(self):
+        self.cutoff = CutOff(
+          cutoff_range_index=int(self.config.value("range/cutoff_range_index")),
+        )
 
     def create_menu(self):
         _menu = QMenu()
@@ -74,6 +92,15 @@ class TrayIcon(QSystemTrayIcon):
         _menu.addAction(label_action)
 
         _menu.addSeparator()
+
+        _submenu = QMenu(_menu)
+        _submenu.setTitle("Preferences")
+        invert = QAction("⇆ Invert", _submenu)
+        invert.triggered.connect(self.invert)
+        invert.setShortcut('Ctrl+I')
+        _submenu.addAction(invert)
+
+        _menu.addMenu(_submenu)
 
         quiteA = QAction("Exit", _menu)
         quiteA.triggered.connect(self.exit_slot)
@@ -95,6 +122,14 @@ class TrayIcon(QSystemTrayIcon):
             QApplication.instance().exit(0)
 
     @pyqtSlot()
+    def invert(self):
+        print("Inverting cutoff range")
+        self.cutoff.invert()
+        self.last_status = self.cutoff.status()
+        self.updateStatus(showNotification=False)
+        self.updateConfig("range/cutoff_range_index", self.cutoff.cutoff_range_index)
+
+    @pyqtSlot()
     def recurring_timer(self):
         status = self.cutoff.status()
         theme = darkdetect.theme().lower()
@@ -108,9 +143,13 @@ class TrayIcon(QSystemTrayIcon):
 
         if status != self.last_status:
             self.last_status = status
-            self.updateIcon()
+            self.updateStatus()
+
+    def updateStatus(self, showNotification=True):
+        self.updateIcon()
+        if showNotification:
             self.showNotification()
-            self.label.setText(self.last_status)
+        self.label.setText(self.last_status)
 
     def updateText(self):
         if self.last_theme == "light":

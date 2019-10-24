@@ -11,20 +11,18 @@ CUTOFF_RANGES = [
       [(0, 6), (10, 14), (18, 24)], # odd days
       # 6-10am 2-6pm
       [(6, 10), (14, 18)], # even days
+    ],
+    [
+      # 6-10am 2-6pm
+      [(6, 10), (14, 18)], # odd days
+      # 12-6am 10-2pm 6-12pm
+      [(0, 6), (10, 14), (18, 24)], # even days
     ]
 ]
 
 
 class CutOff:
-    def __init__(self, cutoff_range_index=0, parity=None):
-        if not parity:
-            current_day = self.get_current_day()
-            if current_day % 2 == 0:
-                parity = 0
-            else:
-                parity = 1
-
-        self.parity = parity
+    def __init__(self, cutoff_range_index=0):
         self.cutoff_range_index = cutoff_range_index
         self.range = self.get_range()
 
@@ -46,19 +44,25 @@ class CutOff:
         return ELECTRICITY
 
     def get_range(self):
-        return CUTOFF_RANGES[self.cutoff_range_index][self.parity]
+        current_day = self.get_current_day()
+        if current_day % 2 == 0:
+            parity = 1
+        else:
+            parity = 0
+
+        return CUTOFF_RANGES[self.cutoff_range_index][parity]
 
     def invert(self):
         """
         This method will invert the order of cut off range, e.g. incase it's consistently showing the wrong status
         """
-        new_parity = None
-        if self.parity == 0:
-            new_parity = 1
+        new_cutoff_range_index = None
+        if self.cutoff_range_index == 0:
+            new_cutoff_range_index = 1
         else:
-            new_parity = 0
+            new_cutoff_range_index = 0
 
-        self.parity = new_parity
+        self.cutoff_range_index = new_cutoff_range_index
         self.range = self.get_range()
 
     def epsilons(self):
