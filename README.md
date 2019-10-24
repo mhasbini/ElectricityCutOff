@@ -6,7 +6,9 @@ Based on 3 ranges: (you have ability to select ranges)
 
 ## ScreenShots
 
-
+![Screenshot 1](screenshots/2.png =755x)
+![Screenshot 2](screenshots/1.png =755x)
+![Screenshot 3](screenshots/3.png =755x)
 
 ## Development
 
