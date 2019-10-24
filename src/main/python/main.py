@@ -62,15 +62,16 @@ class TrayIcon(QSystemTrayIcon):
     def create_menu(self):
         _menu = QMenu()
 
-        label = QLabel(self.last_status)
-        label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label = QLabel(self.last_status)
+        self.label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label.setObjectName("status_text")
         if self.last_theme == "dark":
-            label.setStyleSheet("QLabel {color: white;}")
+            self.label.setStyleSheet("QLabel {color: white;}")
 
-        action = QWidgetAction(label)
-        action.setDefaultWidget(label)
-        _menu.addAction(action)
+        label_action = QWidgetAction(self.label)
+        label_action.setDefaultWidget(self.label)
+        _menu.addAction(label_action)
 
         _menu.addSeparator()
 
@@ -108,6 +109,7 @@ class TrayIcon(QSystemTrayIcon):
             self.last_status = status
             self.updateIcon()
             self.showNotification()
+            self.label.setText(self.last_status)
 
     def showNotification(self):
         msg = f"It's {self.last_status} now"
