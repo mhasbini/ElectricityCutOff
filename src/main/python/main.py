@@ -13,16 +13,15 @@ import darkdetect
 import sys
 
 from cutoff import CutOff, ELECTRICITY, CUTOFF
-from helpers import get_icon
 
 __doc__ = '''Ishtirak time'''
 
-class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
-    def run(self):                              # 2. Implement run()
+class AppContext(ApplicationContext):
+    def run(self):
         my_tray = TrayIcon(self)
         my_tray.show()
 
-        return self.app.exec_()                 # 3. End run() with this line
+        return self.app.exec_()
     
     @cached_property
     def status_icons(self):
@@ -99,12 +98,12 @@ class TrayIcon(QSystemTrayIcon):
 
         if status != self.last_status:
             self.last_status = status
-            msg = f"status changed, it's {status} now"
+            msg = f"It's {status} now"
             self.updateIcon()
 
             self.setToolTip(msg)
             if self.supportsMessages():
-                self.showMessage("MyTimer", msg, QSystemTrayIcon.Information, 1000)
+                self.showMessage("Electricity", msg, QSystemTrayIcon.Information, 1000)
 
     def updateIcon(self):
         status = self.last_status

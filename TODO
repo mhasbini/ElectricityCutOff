@@ -1,3 +1,7 @@
-# Do a release
-
-# Add linting
+- Do a release
+- Add linting
+- Fix requirements.txt
+- Update readme instructinos install
+- Add screenshots to readme
+- Add ability to change range
+- Fix notification to use app name
