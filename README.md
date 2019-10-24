@@ -1,14 +1,12 @@
 ## What
 
-In lebanon we have regular electricity cut offs, this app show as a toolbar tool to tell wether it's electricity is currently on or off (using a backup generator).
-
-Based on 3 ranges: (you have ability to select ranges)
+A toolbar app for mac that show the current status of the electricity (is On or Cutoff) in Lebanon.
 
 ## ScreenShots
 
-![Screenshot 1](screenshots/2.png =755x)
-![Screenshot 2](screenshots/1.png =755x)
-![Screenshot 3](screenshots/3.png =755x)
+![Screenshot 3](screenshots/3.png)
+![Screenshot 1](screenshots/2.png)
+![Screenshot 2](screenshots/1.png)
 
 ## Development
 
