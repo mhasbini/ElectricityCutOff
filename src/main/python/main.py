@@ -22,8 +22,6 @@ import sys
 
 from cutoff import CutOff, ELECTRICITY, CUTOFF
 
-__doc__ = """Ishtirak time"""
-
 
 class AppContext(ApplicationContext):
     def run(self):

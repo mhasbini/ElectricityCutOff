@@ -21,3 +21,4 @@ Lint:
 
 black src/main/python/
 
+pip3 install -r requirements.txt

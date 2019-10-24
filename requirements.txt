@@ -1,9 +1,11 @@
 PyQt5
-darkdetect
+darkdetect # get theme (dark vs light)
 
-# dev & test
 
+# dev
+fbs # packaging & release
+black # linting
+ipdb # debugging
+
+# test
 freezegun # test cutoff tool
-ipdb
-fbs
-black
