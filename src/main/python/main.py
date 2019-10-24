@@ -10,7 +10,6 @@ from PyQt5.QtWidgets import (
     QSystemTrayIcon,
     QMenu,
     QAction,
-    QStyle,
     QWidgetAction,
     QLabel,
     QSizePolicy,
@@ -167,6 +166,7 @@ class TrayIcon(QSystemTrayIcon):
 
 
 if __name__ == "__main__":
-    appctxt = AppContext()  # 4. Instantiate the subclass
-    exit_code = appctxt.run()  # 5. Invoke run()
+    appctxt = AppContext()
+
+    exit_code = appctxt.run()
     sys.exit(exit_code)
