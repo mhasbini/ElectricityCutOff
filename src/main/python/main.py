@@ -48,7 +48,6 @@ class TrayIcon(QSystemTrayIcon):
         self.activated.connect(self.icon_activated_slot)
         self.messageClicked.connect(self.message_clicked_slot)
         self.ctx = ctx
-        # self.setIcon(QApplication.style().standardIcon(QStyle.SP_DriveDVDIcon))
 
         self.cutoff = CutOff(cutoff_range_index=1)
         self.last_status = self.cutoff.status()
@@ -59,6 +58,7 @@ class TrayIcon(QSystemTrayIcon):
         self._timer.timeout.connect(self.recurring_timer)
         self._timer.start()
         self.create_menu()
+        self.showNotification()
 
     def create_menu(self):
         _menu = QMenu()
@@ -107,12 +107,17 @@ class TrayIcon(QSystemTrayIcon):
 
         if status != self.last_status:
             self.last_status = status
-            msg = f"It's {status} now"
             self.updateIcon()
+            self.showNotification()
 
-            self.setToolTip(msg)
-            if self.supportsMessages():
-                self.showMessage("Electricity", msg, QSystemTrayIcon.Information, 1000)
+    def showNotification(self):
+        msg = f"It's {self.last_status} now"
+
+        print("showing message", msg)
+        self.setToolTip(msg)
+        if self.supportsMessages():
+            print("supports messages")
+            self.showMessage("Electricity", msg, QSystemTrayIcon.Information, 1000)
 
     def updateIcon(self):
         status = self.last_status

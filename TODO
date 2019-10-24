@@ -1,4 +1,10 @@
 - Do a release
+- Add description to readme
 - Add screenshots to readme
 - Add ability to change range
 - Add ability to start at login
+- Add blogpost
+- Add to projects.html
+- Sign installer
+- Hide app from app list on tab switch
+- Add logger & remove prints
