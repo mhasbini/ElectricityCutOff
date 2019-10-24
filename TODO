@@ -3,3 +3,4 @@
 - Sign installer
 - Add logger & remove prints
 - Add option to disable notifications
+- Show when the next switch will happen (hour & minutes counter)
