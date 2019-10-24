@@ -148,6 +148,7 @@ class TrayIcon(QSystemTrayIcon):
             self.updateStatus()
 
     def updateStatus(self, showNotification=True):
+        self.cutoff.update_range()
         self.updateIcon()
         if showNotification:
             self.showNotification()

@@ -43,6 +43,9 @@ class CutOff:
 
         return ELECTRICITY
 
+    def update_range(self):
+        self.range = self.get_range()
+
     def get_range(self):
         current_day = self.get_current_day()
         if current_day % 2 == 0:
