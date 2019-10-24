@@ -4,7 +4,6 @@ A toolbar app for mac that show the current status of the electricity (is On or 
 
 ## ScreenShots
 
-![Screenshot 3](screenshots/3.png)
 ![Screenshot 1](screenshots/2.png)
 ![Screenshot 2](screenshots/1.png)
 
