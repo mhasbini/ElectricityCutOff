@@ -46,20 +46,6 @@ class CutOff:
 
         return current_hour, current_minutes, current_seconds
 
-    def should_show_notification(self):
-        """Show notification only on the tip of the hour for the cutoff range"""
-
-        eps_minutes, eps_seconds = self.epsilons() 
-        current_hour, current_minutes, current_seconds = self.current_time()
-
-        for hour_range in self.range:
-            start, stop = hour_range
-
-            if current_hour in [start, stop] and current_minutes <= eps_minutes and current_seconds <= eps_seconds:
-                return True
-
-        return False
-
     def is_electricity(self):
         return self.status() == ELECTRICITY
 
