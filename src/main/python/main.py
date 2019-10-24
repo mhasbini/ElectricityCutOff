@@ -48,7 +48,7 @@ class TrayIcon(QSystemTrayIcon):
         self.messageClicked.connect(self.message_clicked_slot)
         self.ctx = ctx
 
-        self.cutoff = CutOff(cutoff_range_index=1)
+        self.cutoff = CutOff(cutoff_range_index=0)
         self.last_status = self.cutoff.status()
         self.last_theme = darkdetect.theme().lower()
         self.updateIcon()

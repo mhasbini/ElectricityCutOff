@@ -6,16 +6,27 @@ ELECTRICITY = "كهرباء"
 CUTOFF = "إشتراك"
 
 CUTOFF_RANGES = [
-    # 6-10am 2-6pm
-    [(6, 10), (14, 18)],
-    # 12-6am 10-2pm 6-12pm
-    [(0, 6), (10, 14), (18, 24)],
+    [
+      # 12-6am 10-2pm 6-12pm
+      [(0, 6), (10, 14), (18, 24)], # odd days
+      # 6-10am 2-6pm
+      [(6, 10), (14, 18)], # even days
+    ]
 ]
 
 
 class CutOff:
-    def __init__(self, cutoff_range_index=0):
-        self.range = CUTOFF_RANGES[cutoff_range_index]
+    def __init__(self, cutoff_range_index=0, parity=None):
+        if not parity:
+            current_day = self.get_current_day()
+            if current_day % 2 == 0:
+                parity = 0
+            else:
+                parity = 1
+
+        self.parity = parity
+        self.cutoff_range_index = cutoff_range_index
+        self.range = self.get_range()
 
     def status(self):
         """return wether it's ELECTRICITY or CUTOFF based on the selected range and current time"""
@@ -34,9 +45,30 @@ class CutOff:
 
         return ELECTRICITY
 
+    def get_range(self):
+        return CUTOFF_RANGES[self.cutoff_range_index][self.parity]
+
+    def invert(self):
+        """
+        This method will invert the order of cut off range, e.g. incase it's consistently showing the wrong status
+        """
+        new_parity = None
+        if self.parity == 0:
+            new_parity = 1
+        else:
+            new_parity = 0
+
+        self.parity = new_parity
+        self.range = self.get_range()
+
     def epsilons(self):
         # minutes, seconds
         return 0, 1
+
+    def get_current_day(self):
+        now = datetime.now()
+
+        return int(now.strftime("%-d"))
 
     def current_time(self):
         now = datetime.now()

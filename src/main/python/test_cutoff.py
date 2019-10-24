@@ -8,7 +8,7 @@ from cutoff import CutOff, ELECTRICITY, CUTOFF
 class CutOffTest(unittest.TestCase):
     def setUp(self):
         # 6-10am 2-6pm
-        self.cutoff = CutOff(cutoff_range_index=0)
+        self.cutoff = CutOff(cutoff_range_index=0, parity=0)
 
     def test_status(self):
         electricity_times = [
