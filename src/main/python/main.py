@@ -104,12 +104,19 @@ class TrayIcon(QSystemTrayIcon):
         if theme != self.last_theme:
             self.last_theme = theme
             self.updateIcon()
+            self.updateText()
 
         if status != self.last_status:
             self.last_status = status
             self.updateIcon()
             self.showNotification()
             self.label.setText(self.last_status)
+
+    def updateText(self):
+        if self.last_theme == "light":
+          self.label.setStyleSheet("QLabel {color: black;}")
+        else:
+          self.label.setStyleSheet("QLabel {color: white;}")
 
     def showNotification(self):
         msg = f"It's {self.last_status} now"
