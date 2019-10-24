@@ -111,7 +111,7 @@ class TrayIcon(QSystemTrayIcon):
 
     @pyqtSlot()
     def exit_slot(self):
-        print("exit_slot")
+        # print("exit_slot")
         reply = QMessageBox.question(
             None, "Message", "Are you sure to quit?", QMessageBox.Yes | QMessageBox.No
         )
@@ -123,7 +123,7 @@ class TrayIcon(QSystemTrayIcon):
 
     @pyqtSlot()
     def invert(self):
-        print("Inverting cutoff range")
+        # print("Inverting cutoff range")
         self.cutoff.invert()
         self.last_status = self.cutoff.status()
         self.updateStatus(showNotification=False)
@@ -134,7 +134,7 @@ class TrayIcon(QSystemTrayIcon):
         status = self.cutoff.status()
         theme = darkdetect.theme().lower()
 
-        print(f"status: {status}")
+        # print(f"status: {status}")
 
         if theme != self.last_theme:
             self.last_theme = theme
@@ -160,10 +160,10 @@ class TrayIcon(QSystemTrayIcon):
     def showNotification(self):
         msg = f"It's {self.last_status} now"
 
-        print("showing message", msg)
+        # print("showing message", msg)
         self.setToolTip(msg)
         if self.supportsMessages():
-            print("supports messages")
+            # print("supports messages")
             self.showMessage("Electricity", msg, QSystemTrayIcon.Information, 1000)
 
     def updateIcon(self):
@@ -177,28 +177,28 @@ class TrayIcon(QSystemTrayIcon):
         self.setIcon(self.ctx.status_icons[icon])
 
     def icon_activated_slot(self, reason):
-        print("icon_activated_slot")
+        # print("icon_activated_slot")
         if reason == QSystemTrayIcon.Unknown:
-            print("QSystemTrayIcon.Unknown")
+            # print("QSystemTrayIcon.Unknown")
             pass
         elif reason == QSystemTrayIcon.Context:
-            print("QSystemTrayIcon.Context")
+            # print("QSystemTrayIcon.Context")
             pass
         elif reason == QSystemTrayIcon.DoubleClick:
-            print("QSystemTrayIcon.DoubleClick")
+            # print("QSystemTrayIcon.DoubleClick")
             pass
         elif reason == QSystemTrayIcon.Trigger:
-            print("QSystemTrayIcon.Trigger")
+            # print("QSystemTrayIcon.Trigger")
             pass
         elif reason == QSystemTrayIcon.MiddleClick:
-            print("QSystemTrayIcon.MiddleClick")
+            # print("QSystemTrayIcon.MiddleClick")
             current_mouse_cursor = QCursor.pos() - QPoint(50, 50)
             menu = self.contextMenu()
             menu.popup(current_mouse_cursor)
 
     @pyqtSlot()
     def message_clicked_slot(self):
-        print("message was clicked")
+        # print("message was clicked")
 
     def closeEvent(self, event):
         reply = QMessageBox.question(
