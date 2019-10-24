@@ -52,7 +52,9 @@ class TrayIcon(QSystemTrayIcon):
         self.ctx = ctx
 
         self.config = self.loadConfig()
-        self.cutoff = CutOff(cutoff_range_index=int(self.config.value("range/cutoff_range_index")))
+        self.cutoff = CutOff(
+            cutoff_range_index=int(self.config.value("range/cutoff_range_index"))
+        )
         self.last_status = self.cutoff.status()
         self.last_theme = darkdetect.theme().lower()
         self.updateIcon()
@@ -74,7 +76,7 @@ class TrayIcon(QSystemTrayIcon):
 
     def reloadCutOff(self):
         self.cutoff = CutOff(
-          cutoff_range_index=int(self.config.value("range/cutoff_range_index")),
+            cutoff_range_index=int(self.config.value("range/cutoff_range_index"))
         )
 
     def create_menu(self):
@@ -97,7 +99,7 @@ class TrayIcon(QSystemTrayIcon):
         _submenu.setTitle("Preferences")
         invert = QAction("⇆ Invert", _submenu)
         invert.triggered.connect(self.invert)
-        invert.setShortcut('Ctrl+I')
+        invert.setShortcut("Ctrl+I")
         _submenu.addAction(invert)
 
         _menu.addMenu(_submenu)
@@ -153,9 +155,9 @@ class TrayIcon(QSystemTrayIcon):
 
     def updateText(self):
         if self.last_theme == "light":
-          self.label.setStyleSheet("QLabel {color: black;}")
+            self.label.setStyleSheet("QLabel {color: black;}")
         else:
-          self.label.setStyleSheet("QLabel {color: white;}")
+            self.label.setStyleSheet("QLabel {color: white;}")
 
     def showNotification(self):
         msg = f"It's {self.last_status} now"
@@ -198,6 +200,7 @@ class TrayIcon(QSystemTrayIcon):
 
     @pyqtSlot()
     def message_clicked_slot(self):
+        pass
         # print("message was clicked")
 
     def closeEvent(self, event):
