@@ -4,9 +4,17 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from fbs_runtime.application_context import cached_property
 
-from PyQt5.QtWidgets import (QApplication,
-                             QMessageBox, QSystemTrayIcon,
-                             QMenu, QAction, QStyle, QWidgetAction, QLabel, QSizePolicy)
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMessageBox,
+    QSystemTrayIcon,
+    QMenu,
+    QAction,
+    QStyle,
+    QWidgetAction,
+    QLabel,
+    QSizePolicy,
+)
 from PyQt5.QtCore import pyqtSlot, QTimer, QPoint, Qt
 from PyQt5.QtGui import QCursor, QIcon
 import darkdetect
@@ -14,7 +22,8 @@ import sys
 
 from cutoff import CutOff, ELECTRICITY, CUTOFF
 
-__doc__ = '''Ishtirak time'''
+__doc__ = """Ishtirak time"""
+
 
 class AppContext(ApplicationContext):
     def run(self):
@@ -22,14 +31,16 @@ class AppContext(ApplicationContext):
         my_tray.show()
 
         return self.app.exec_()
-    
+
     @cached_property
     def status_icons(self):
         return {
-            "electricity-light": QIcon(self.get_resource("images/electricity-light.png")),
+            "electricity-light": QIcon(
+                self.get_resource("images/electricity-light.png")
+            ),
             "electricity-dark": QIcon(self.get_resource("images/electricity-dark.png")),
             "cutoff-light": QIcon(self.get_resource("images/cutoff-light.png")),
-            "cutoff-dark": QIcon(self.get_resource("images/cutoff-dark.png"))
+            "cutoff-dark": QIcon(self.get_resource("images/cutoff-dark.png")),
         }
 
 
@@ -57,7 +68,7 @@ class TrayIcon(QSystemTrayIcon):
         label = QLabel(self.last_status)
         label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        if self.last_theme == 'dark':
+        if self.last_theme == "dark":
             label.setStyleSheet("QLabel {color: white;}")
 
         action = QWidgetAction(label)
@@ -75,10 +86,10 @@ class TrayIcon(QSystemTrayIcon):
 
     @pyqtSlot()
     def exit_slot(self):
-        print('exit_slot')
-        reply = QMessageBox.question(None, 'Message',
-                                     "Are you sure to quit?", QMessageBox.Yes |
-                                     QMessageBox.No)
+        print("exit_slot")
+        reply = QMessageBox.question(
+            None, "Message", "Are you sure to quit?", QMessageBox.Yes | QMessageBox.No
+        )
         if reply == QMessageBox.Yes:
             self._timer.stop()
             self._menu.deleteLater()
@@ -109,28 +120,28 @@ class TrayIcon(QSystemTrayIcon):
         status = self.last_status
 
         if status == ELECTRICITY:
-            icon = f'electricity-{self.last_theme}'
+            icon = f"electricity-{self.last_theme}"
         else:
-            icon = f'cutoff-{self.last_theme}'
+            icon = f"cutoff-{self.last_theme}"
 
         self.setIcon(self.ctx.status_icons[icon])
 
     def icon_activated_slot(self, reason):
-        print('icon_activated_slot')
+        print("icon_activated_slot")
         if reason == QSystemTrayIcon.Unknown:
-            print('QSystemTrayIcon.Unknown')
+            print("QSystemTrayIcon.Unknown")
             pass
         elif reason == QSystemTrayIcon.Context:
-            print('QSystemTrayIcon.Context')
+            print("QSystemTrayIcon.Context")
             pass
         elif reason == QSystemTrayIcon.DoubleClick:
-            print('QSystemTrayIcon.DoubleClick')
+            print("QSystemTrayIcon.DoubleClick")
             pass
         elif reason == QSystemTrayIcon.Trigger:
-            print('QSystemTrayIcon.Trigger')
+            print("QSystemTrayIcon.Trigger")
             pass
         elif reason == QSystemTrayIcon.MiddleClick:
-            print('QSystemTrayIcon.MiddleClick')
+            print("QSystemTrayIcon.MiddleClick")
             current_mouse_cursor = QCursor.pos() - QPoint(50, 50)
             menu = self.contextMenu()
             menu.popup(current_mouse_cursor)
@@ -140,9 +151,9 @@ class TrayIcon(QSystemTrayIcon):
         print("message was clicked")
 
     def closeEvent(self, event):
-        reply = QMessageBox.question(self, 'Message',
-                                     "Are you sure to quit?", QMessageBox.Yes |
-                                     QMessageBox.No)
+        reply = QMessageBox.question(
+            self, "Message", "Are you sure to quit?", QMessageBox.Yes | QMessageBox.No
+        )
         if reply == QMessageBox.Yes:
             self._timer.stop()
             self._menu.deleteLater()
@@ -152,7 +163,7 @@ class TrayIcon(QSystemTrayIcon):
             event.ignore()
 
 
-if __name__ == '__main__':
-    appctxt = AppContext()                      # 4. Instantiate the subclass
-    exit_code = appctxt.run()                   # 5. Invoke run()
+if __name__ == "__main__":
+    appctxt = AppContext()  # 4. Instantiate the subclass
+    exit_code = appctxt.run()  # 5. Invoke run()
     sys.exit(exit_code)

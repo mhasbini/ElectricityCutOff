@@ -16,3 +16,8 @@ fbs ...
 Requirements install
 
 run tests
+
+Lint:
+
+black src/main/python/
+

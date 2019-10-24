@@ -1,8 +1,9 @@
 PyQt5
+darkdetect
 
 # dev & test
 
 freezegun # test cutoff tool
 ipdb
-darkdetect
 fbs
+black
