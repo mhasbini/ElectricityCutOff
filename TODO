@@ -2,3 +2,4 @@
 - Add ability to start at login
 - Sign installer
 - Add logger & remove prints
+- Add option to disable notifications

@@ -2,6 +2,8 @@
 
 A toolbar app for mac that show the current status of the electricity (is On or Cutoff) in Lebanon.
 
+More background informations in [this blog post](https://mhasbini.com/blog/introducing-electricity-cutoff-app.html).
+
 ## ScreenShots
 
 ![Screenshot 1](screenshots/2.png)
