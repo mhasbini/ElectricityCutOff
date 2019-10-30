@@ -55,7 +55,7 @@ class TrayIcon(QSystemTrayIcon):
         self.cutoff = CutOff(
             cutoff_range_index=int(self.config.value("range/cutoff_range_index"))
         )
-        self.last_status = self.cutoff.status()
+        self.last_status, self.last_timeleft = self.cutoff.status()
         self.last_theme = darkdetect.theme().lower()
         self.updateIcon()
         self._timer = QTimer()
@@ -82,7 +82,7 @@ class TrayIcon(QSystemTrayIcon):
     def create_menu(self):
         _menu = QMenu()
 
-        self.label = QLabel(self.last_status)
+        self.label = QLabel(self.formatStatus())
         self.label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label.setObjectName("status_text")
@@ -113,7 +113,6 @@ class TrayIcon(QSystemTrayIcon):
 
     @pyqtSlot()
     def exit_slot(self):
-        # print("exit_slot")
         reply = QMessageBox.question(
             None, "Message", "Are you sure to quit?", QMessageBox.Yes | QMessageBox.No
         )
@@ -125,18 +124,17 @@ class TrayIcon(QSystemTrayIcon):
 
     @pyqtSlot()
     def invert(self):
-        # print("Inverting cutoff range")
         self.cutoff.invert()
-        self.last_status = self.cutoff.status()
+        self.last_status, self.last_timeleft = self.cutoff.status()
         self.updateStatus(showNotification=False)
         self.updateConfig("range/cutoff_range_index", self.cutoff.cutoff_range_index)
 
     @pyqtSlot()
     def recurring_timer(self):
-        status = self.cutoff.status()
+        status, time_left = self.cutoff.status()
         theme = darkdetect.theme().lower()
 
-        # print(f"status: {status}")
+        self.updateStatusText(time_left)
 
         if theme != self.last_theme:
             self.last_theme = theme
@@ -152,7 +150,19 @@ class TrayIcon(QSystemTrayIcon):
         self.updateIcon()
         if showNotification:
             self.showNotification()
-        self.label.setText(self.last_status)
+        self.updateStatusText()
+
+    def updateStatusText(self, timeleft=None):
+        if not timeleft:
+            timeleft = self.last_timeleft
+
+        self.label.setText(self.formatStatus(timeleft))
+
+    def formatStatus(self, timeleft=""):
+      if timeleft:
+          return f"({timeleft}-) {self.last_status}"
+      else:
+          return f"{self.last_status}"
 
     def updateText(self):
         if self.last_theme == "light":
@@ -163,10 +173,8 @@ class TrayIcon(QSystemTrayIcon):
     def showNotification(self):
         msg = f"It's {self.last_status} now"
 
-        # print("showing message", msg)
         self.setToolTip(msg)
         if self.supportsMessages():
-            # print("supports messages")
             self.showMessage("Electricity", msg, QSystemTrayIcon.Information, 1000)
 
     def updateIcon(self):
@@ -180,21 +188,15 @@ class TrayIcon(QSystemTrayIcon):
         self.setIcon(self.ctx.status_icons[icon])
 
     def icon_activated_slot(self, reason):
-        # print("icon_activated_slot")
         if reason == QSystemTrayIcon.Unknown:
-            # print("QSystemTrayIcon.Unknown")
             pass
         elif reason == QSystemTrayIcon.Context:
-            # print("QSystemTrayIcon.Context")
             pass
         elif reason == QSystemTrayIcon.DoubleClick:
-            # print("QSystemTrayIcon.DoubleClick")
             pass
         elif reason == QSystemTrayIcon.Trigger:
-            # print("QSystemTrayIcon.Trigger")
             pass
         elif reason == QSystemTrayIcon.MiddleClick:
-            # print("QSystemTrayIcon.MiddleClick")
             current_mouse_cursor = QCursor.pos() - QPoint(50, 50)
             menu = self.contextMenu()
             menu.popup(current_mouse_cursor)
@@ -202,7 +204,6 @@ class TrayIcon(QSystemTrayIcon):
     @pyqtSlot()
     def message_clicked_slot(self):
         pass
-        # print("message was clicked")
 
     def closeEvent(self, event):
         reply = QMessageBox.question(
