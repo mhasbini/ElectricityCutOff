@@ -18,6 +18,7 @@ from PyQt5.QtCore import pyqtSlot, QTimer, QPoint, Qt, QSettings
 from PyQt5.QtGui import QCursor, QIcon
 import darkdetect
 import sys
+import os
 
 from cutoff import CutOff, ELECTRICITY, CUTOFF
 
@@ -97,10 +98,24 @@ class TrayIcon(QSystemTrayIcon):
 
         _submenu = QMenu(_menu)
         _submenu.setTitle("Preferences")
+
         invert = QAction("⇆ Invert", _submenu)
         invert.triggered.connect(self.invert)
         invert.setShortcut("Ctrl+I")
         _submenu.addAction(invert)
+
+        self.launchAtLogin = QAction("Launch At Login", _submenu)
+        self.launchAtLogin.setCheckable(True)
+
+        config_value = self.config.value("config/start_at_login")
+        if config_value:
+            config_value = True
+        else:
+            config_value = False
+
+        self.launchAtLogin.setChecked(config_value)
+        self.launchAtLogin.triggered.connect(self.launchAtLoginAction)
+        _submenu.addAction(self.launchAtLogin)
 
         _menu.addMenu(_submenu)
 
@@ -110,6 +125,40 @@ class TrayIcon(QSystemTrayIcon):
 
         self._menu = _menu
         self.setContextMenu(self._menu)
+
+    def plist_file_path(self):
+        return os.path.expanduser('~/Library/LaunchAgents/ElectricityCutOff.plist')
+
+    def plist_file_contents(self):
+        return f"""
+      <?xml version="1.0" encoding="UTF-8"?>
+      <plist version="1.0">
+        <dict>
+          <key>RunAtLoad</key>
+          <true />
+          <key>Label</key>
+          <string>ElectricityCutOff</string>
+          <key>ProgramArguments</key>
+          <array>
+            <string>/Applications/ElectricityCutOff.app/Contents//MacOS/ElectricityCutOff</string>
+          </array>
+          <key>KeepAlive</key>
+          <false/>
+          <key>RunAtLoad</key>
+          <true/>
+          </dict>
+      </plist>
+      """
+
+    @pyqtSlot()
+    def launchAtLoginAction(self):
+        self.updateConfig("config/start_at_login", self.launchAtLogin.isChecked())
+        if self.launchAtLogin.isChecked():
+            with open(self.plist_file_path(), 'w+') as file:
+                file.write(self.plist_file_contents())
+        elif os.path.exists(self.plist_file_path()):
+            os.remove(self.plist_file_path())
+
 
     @pyqtSlot()
     def exit_slot(self):
