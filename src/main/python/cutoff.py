@@ -37,10 +37,10 @@ class CutOff:
             start, stop = hour_range
 
             if current_hour in range(start, stop):
-                return time_left, CUTOFF
+                return CUTOFF, time_left
 
             if current_hour == stop and current_minutes == 0 and current_seconds == 0:
-                return time_left, CUTOFF
+                return CUTOFF, time_left
 
         return ELECTRICITY, time_left
 
